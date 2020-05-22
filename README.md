@@ -15,7 +15,7 @@ You can use the following table to learn more about each sample, and find the co
 |  **Sample** | **Description** | **Documentation** |
 | -------------|------------------------------|------------------|
 | [Fabric test network](test-network) | Get started by deploying a basic Fabric network on your local machine. | [Using the Fabric test network](https://hyperledger-fabric.readthedocs.io/en/master/test_network.html) |
-| [Fabcar](fabcar) | Learn how to use the Fabric SDK's to invoke smart contracts from your client applications. | [Writing your first application](https://hyperledger-fabric.readthedocs.io/en/master/write_first_app.html) |
+| [ExamResult](exam_result) | Learn how to use the Fabric SDK's to invoke smart contracts from your client applications. | [Writing your first application](https://hyperledger-fabric.readthedocs.io/en/master/write_first_app.html) |
 | [Commercial paper](commercial-paper) | Explore a use case in which two organizations use a blockchain network to trade commercial paper. | [Commercial paper tutorial](https://hyperledger-fabric.readthedocs.io/en/master/tutorial/commercial_paper.html) |
 | [Interest rate swaps](interest_rate_swaps) | Explore state based endorsement using a financial services use case. | [Setting Key level endorsement policies](https://hyperledger-fabric.readthedocs.io/en/master/endorsement-policies.html#setting-key-level-endorsement-policies) |
 | [Off chain data](off_chain_data) | Learn how to use the Peer channel-based event services to build an off chain database for reporting and analytics. | [Peer channel-based event services](https://hyperledger-fabric.readthedocs.io/en/master/peer_event_services.html) |

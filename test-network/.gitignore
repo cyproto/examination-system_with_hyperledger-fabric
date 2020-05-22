@@ -10,5 +10,5 @@ organizations/fabric-ca/org2/*
 organizations/ordererOrganizations/*
 organizations/peerOrganizations/*
 system-genesis-block/*
-fabcar.tar.gz
+exam_result.tar.gz
 log.txt

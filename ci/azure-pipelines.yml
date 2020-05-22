@@ -36,37 +36,37 @@ jobs:
       - template: templates/install-deps.yml
       - template: templates/commercial-paper/azure-pipelines-javascript.yml
 
-  - job: FabCar_Go
-    displayName: FabCar (Go)
+  - job: ExamResult_Go
+    displayName: ExamResult (Go)
     pool:
       vmImage: ubuntu-18.04
     steps:
       - template: templates/install-deps.yml
-      - template: templates/fabcar/azure-pipelines-go.yml
+      - template: templates/exam_result/azure-pipelines-go.yml
 
-  - job: FabCar_Java
-    displayName: FabCar (Java)
+  - job: ExamResult_Java
+    displayName: ExamResult (Java)
     pool:
       vmImage: ubuntu-18.04
     steps:
       - template: templates/install-deps.yml
-      - template: templates/fabcar/azure-pipelines-java.yml
+      - template: templates/exam_result/azure-pipelines-java.yml
 
-  - job: FabCar_JavaScript
-    displayName: FabCar (JavaScript)
+  - job: ExamResult_JavaScript
+    displayName: ExamResult (JavaScript)
     pool:
       vmImage: ubuntu-18.04
     steps:
       - template: templates/install-deps.yml
-      - template: templates/fabcar/azure-pipelines-javascript.yml
+      - template: templates/exam_result/azure-pipelines-javascript.yml
 
-  - job: Fabcar_TypeScript
-    displayName: FabCar (TypeScript)
+  - job: ExamResult_TypeScript
+    displayName: ExamResult (TypeScript)
     pool:
       vmImage: ubuntu-18.04
     steps:
       - template: templates/install-deps.yml
-      - template: templates/fabcar/azure-pipelines-typescript.yml
+      - template: templates/exam_result/azure-pipelines-typescript.yml
 
   - job: TestNetwork
     displayName: Test Network
