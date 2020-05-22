@@ -1,0 +1,8 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+steps:
+  - script: ./startFabric.sh go
+    workingDirectory: exam_result
+    displayName: Start Fabric

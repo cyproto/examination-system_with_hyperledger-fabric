@@ -1,0 +1,14 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+steps:
+  - script: ./startFabric.sh java
+    workingDirectory: exam_result
+    displayName: Start Fabric
+  - script: retry -- mvn dependency:go-offline
+    workingDirectory: exam_result/java
+    displayName: Install ExamResult Application Dependencies
+  - script: mvn test
+    workingDirectory: exam_result/java
+    displayName: Run ExamResult Application

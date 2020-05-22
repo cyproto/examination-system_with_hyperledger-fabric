@@ -1,0 +1,21 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+steps:
+  - script: ./startFabric.sh javascript
+    workingDirectory: exam_result
+    displayName: Start Fabric
+  - script: |
+      retry -- npm install
+      npm ls
+    workingDirectory: exam_result/javascript
+    displayName: Install ExamResult Application Dependencies
+  - script: |
+      set -ex
+      node enrollAdmin
+      node registerUser
+      node invoke
+      node query
+    workingDirectory: exam_result/javascript
+    displayName: Run ExamResult Application
