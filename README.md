@@ -1,31 +1,62 @@
-[//]: # (SPDX-License-Identifier: CC-BY-4.0)
+# Examination System using Hyperledger-fabric
+This repository contains chaincode, test-network and API made to work as a backend for examination system project whose frontend can be found [here](https://github.com/cyproto/examination-system_frontend "here").
 
-# Hyperledger Fabric Samples
+Currently, the file structure is same as [fabric-samples](https://github.com/hyperledger/fabric-samples "fabric-samples") provided by hyperledger. 
+- The chaincode is written with reference of fabcar example.
+-  APIs are written in Node.js.
+- And for network test-network is being used.
 
-You can use Fabric samples to get started working with Hyperledger Fabric, explore important Fabric features, and learn how to build applications that can interact with blockchain networks using the Fabric SDKs. To learn more about Hyperledger Fabric, visit the [Fabric documentation](https://hyperledger-fabric.readthedocs.io/en/master).
+## Getting started
 
-## Getting started with the Fabric samples
+Make sure that you have [setup your environment](https://hyperledger-fabric.readthedocs.io/en/release-2.0/dev-setup/devenv.html "setup your environment") and are done with all the [prerequisites](https://hyperledger-fabric.readthedocs.io/en/release-2.0/prereqs.html "prerequisites").
 
-To use the Fabric samples, you need to download the Fabric Docker images and the Fabric CLI tools. First, make sure that you have installed all of the [Fabric prerequisites](https://hyperledger-fabric.readthedocs.io/en/master/prereqs.html). You can then follow the instructions to [Install the Fabric Samples, Binaries, and Docker Images](https://hyperledger-fabric.readthedocs.io/en/master/install.html) in the Fabric documentation. In addition to downloading the Fabric images and tool binaries, the instructions will make you clone the Fabric samples on your local machine.
+**Versions:**
+- **fabric:** 2.1.0
+- **golang:** go1.14.1
+- **node:** v10.15.2
+- **npm:** 5.8.0
 
-## Guide to the Fabric samples
+Now, just run the following command to clone and pull all the binaries and dockers images. No need to clone this repository manually, it'll all be done by the script.
+```bash
+curl -sSL abc
+```
 
-You can use the following table to learn more about each sample, and find the corresponding tutorial or documentation.
+## Start fabric network:
+After running this you will have to start the network and deploy the chaincode on it. For that just 
+```bash
+cd exam_result
+sudo ./startNetwork.sh
+```
 
-|  **Sample** | **Description** | **Documentation** |
-| -------------|------------------------------|------------------|
-| [Fabric test network](test-network) | Get started by deploying a basic Fabric network on your local machine. | [Using the Fabric test network](https://hyperledger-fabric.readthedocs.io/en/master/test_network.html) |
-| [ExamResult](exam_result) | Learn how to use the Fabric SDK's to invoke smart contracts from your client applications. | [Writing your first application](https://hyperledger-fabric.readthedocs.io/en/master/write_first_app.html) |
-| [Commercial paper](commercial-paper) | Explore a use case in which two organizations use a blockchain network to trade commercial paper. | [Commercial paper tutorial](https://hyperledger-fabric.readthedocs.io/en/master/tutorial/commercial_paper.html) |
-| [Interest rate swaps](interest_rate_swaps) | Explore state based endorsement using a financial services use case. | [Setting Key level endorsement policies](https://hyperledger-fabric.readthedocs.io/en/master/endorsement-policies.html#setting-key-level-endorsement-policies) |
-| [Off chain data](off_chain_data) | Learn how to use the Peer channel-based event services to build an off chain database for reporting and analytics. | [Peer channel-based event services](https://hyperledger-fabric.readthedocs.io/en/master/peer_event_services.html) |
-| [High throughput](high-throughput) | Learn how you can design your smart contracts to process a large volume of transactions. | |
-| [First network](first-network) | **Deprecated. Use the Fabric test network to get started.** | [Build your first network](https://hyperledger-fabric.readthedocs.io/en/master/build_network.html) |
-| [Chaincode](chaincode) | A set of sample smart contracts used by other samples and the tutorials in the Fabric documentation. | [Fabric tutorials](https://hyperledger-fabric.readthedocs.io/en/master/tutorials.html) |
+Now, enroll admin and register user by doing 
+```bash
+cd javascript
+node enrollAdmin.js
+node registerUser.js
+```
 
-## License <a name="license"></a>
+If everything goes as expected the chaincode will be deployed on channel `mychannel` and fabric network will be up and running.
 
-Hyperledger Project source code files are made available under the Apache
-License, Version 2.0 (Apache-2.0), located in the [LICENSE](LICENSE) file.
-Hyperledger Project documentation files are made available under the Creative
-Commons Attribution 4.0 International License (CC-BY-4.0), available at http://creativecommons.org/licenses/by/4.0/.
+## API:
+Now heading towards the API, run
+```bash
+node app.js
+```
+which will start a node server on `localhost:8080`.
+
+- There are 2 apis namely `getResult`  which will fetch result from the fabric ledger, it needs `emailId` as a query param of the candidate who has already taken the exam/test. Check [request](https://gist.github.com/cyproto/40ec270063eeba8cd9f02e8968ab5de5 "request") and [response](https://gist.github.com/cyproto/d77bb897ee417a668a25c7c8c9c84cae "response") formats. This API calls `queryResult` chaincode function.
+
+- Other one is `sendResult` which takes the request in JSON, calculates result and pushes it to the blockchain.  Check the [request](https://gist.github.com/cyproto/7c8ac445d00b75e8093b6fbd6fe8f7e5 "request") and [response](https://gist.github.com/cyproto/de499d3f42e50cbf3a941ac40294025f "response"). This API calls
+`createResult` with appropriate args.
+
+## Chaincode:
+- For now tis just has 3 basic functions as `initLedger` which initializes the ledger with some dummy values as soon as chaincode is deployed.
+- Then there's `queryResult` which uses 'emailId' as an argument to pull state/data from the ledger.
+- Finally `createResult`  is used to insert result in the blockchain.
+
+## Screenshots:
+#### getResult
+<img src="https://i.imgur.com/HYAdyNb.png" width="500">
+
+#### sendResult
+<img src="https://i.imgur.com/tOg88xq.png" width="500">
