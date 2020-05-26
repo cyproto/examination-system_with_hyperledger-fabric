@@ -9,8 +9,6 @@ const fs = require( 'fs' );
 const PORT = 8080;
 const HOST = 'localhost';
 
-var FabricSdkService = require( './FabricSdkService' );
-
 app.options( '*', cors() );
 app.use( cors() );
 app.use( bodyParser.json() );
@@ -18,15 +16,10 @@ app.use( bodyParser.urlencoded( {
 	extended: false
 } ) );
 
-app.use( ( req, res, next ) => {
-	FabricSdkService.attachFabricClient( req) ;
-	next();
-} );
-
 app.get( '/getResult', async ( req, res ) => {
 
     let emailId = req.query['emailId'];
-    console.log( emailId )
+
     try {
         const ccpPath = path.resolve( __dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json' );
         const ccp = JSON.parse( fs.readFileSync(ccpPath, 'utf8') );
@@ -61,8 +54,8 @@ app.get( '/getResult', async ( req, res ) => {
 
     } catch ( error ) {
         console.error( `Failed to evaluate transaction: ${error}` );
-        process.exit( 1 );
     }
+
 });
 
 app.post( '/sendResult', async ( req, res ) => {
@@ -70,9 +63,9 @@ app.post( '/sendResult', async ( req, res ) => {
     let emailId = req.body['emailId'];
     let questionsData = req.body['questionsData'];
     let passingCutOff = req.body['passingCutOff'];
-
     let questionsCount = questionsData.length;
     let correctAnswersCount = 0;
+    
     for( let i = 0; i < questionsCount; i++ ) {
 
         if( questionsData[i]['correct_option'] == questionsData[i]['selectedOption'] ) {
@@ -87,11 +80,7 @@ app.post( '/sendResult', async ( req, res ) => {
     } else {
         grade = 'Failed'
     }
-    console.log(JSON.stringify(questionsData));
-    console.log(questionsCount.toString());
-    console.log(percentage.toString());
-    console.log(grade.toString());
-    console.log(correctAnswersCount.toString());
+
     try {
         
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -109,11 +98,12 @@ app.post( '/sendResult', async ( req, res ) => {
         }
 
         const gateway = new Gateway();
+        
         await gateway.connect(ccp, { wallet, identity: 'appUser', discovery: { enabled: true, asLocalhost: true } });
 
         const network = await gateway.getNetwork('mychannel');
-
         const contract = network.getContract('exam_result');
+
         await contract.submitTransaction('createResult', emailId, JSON.stringify( questionsData ), correctAnswersCount.toString(), percentage.toString(), grade.toString(), questionsCount.toString() );
         console.log('Transaction has been submitted');
 
@@ -125,10 +115,8 @@ app.post( '/sendResult', async ( req, res ) => {
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
-        process.exit(1);
     }
 });
 
 app.listen( PORT, HOST );
 console.log( `Running on http://${HOST}:${PORT}` );
-

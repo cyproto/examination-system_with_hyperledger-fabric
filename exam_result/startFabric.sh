@@ -10,21 +10,18 @@ set -e
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)
-CC_SRC_LANGUAGE=${1:-"go"}
+CC_SRC_LANGUAGE=${1:-"javascript"}
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
-if [ "$CC_SRC_LANGUAGE" != "go" -a "$CC_SRC_LANGUAGE" != "golang" -a "$CC_SRC_LANGUAGE" != "java" \
- -a  "$CC_SRC_LANGUAGE" != "javascript"  -a "$CC_SRC_LANGUAGE" != "typescript" ] ; then
+if [ "$CC_SRC_LANGUAGE" != "javascript" ] ; then
 
 	echo The chaincode language ${CC_SRC_LANGUAGE} is not supported by this script
- 	echo Supported chaincode languages are: go, java, javascript, and typescript
+ 	echo Supported chaincode languages are: javascript
  	exit 1
 
 fi
 
 # clean out any old identites in the wallets
 rm -rf javascript/wallet/*
-rm -rf java/wallet/*
-rm -rf typescript/wallet/*
 
 # launch network; create channel and join peer to channel
 pushd ../test-network
@@ -37,70 +34,85 @@ cat <<EOF
 
 Total setup execution time : $(($(date +%s) - starttime)) secs ...
 
-Next, use the ExamResult applications to interact with the deployed ExamResult contract.
-The ExamResult applications are available in multiple programming languages.
-Follow the instructions for the programming language of your choice:
-
-JavaScript:
-
-  Start by changing into the "javascript" directory:
+Steps:
     cd javascript
-
-  Next, install all required packages:
     npm install
 
-  Then run the following applications to enroll the admin user, and register a new user
-  called appUser which will be used by the other applications to interact with the deployed
-  ExamResult contract:
+  Then enroll admin and register a new user:
     node enrollAdmin
     node registerUser
 
-  You can run the invoke application as follows. By default, the invoke application will
-  create a new car, but you can update the application to submit other transactions:
-    node invoke
+  Now just run node app to start server:
+    node app.js
+  
+  This will start server on localhost:8080 and you can access the getResult and sendResult apis
+  with appropriate request object.
 
-  You can run the query application as follows. By default, the query application will
-  return all cars, but you can update the application to evaluate other transactions:
-    node query
-
-TypeScript:
-
-  Start by changing into the "typescript" directory:
-    cd typescript
-
-  Next, install all required packages:
-    npm install
-
-  Next, compile the TypeScript code into JavaScript:
-    npm run build
-
-  Then run the following applications to enroll the admin user, and register a new user
-  called appUser which will be used by the other applications to interact with the deployed
-  ExamResult contract:
-    node dist/enrollAdmin
-    node dist/registerUser
-
-  You can run the invoke application as follows. By default, the invoke application will
-  create a new car, but you can update the application to submit other transactions:
-    node dist/invoke
-
-  You can run the query application as follows. By default, the query application will
-  return all cars, but you can update the application to evaluate other transactions:
-    node dist/query
-
-Java:
-
-  Start by changing into the "java" directory:
-    cd java
-
-  Then, install dependencies and run the test using:
-    mvn test
-
-  The test will invoke the sample client app which perform the following:
-    - Enroll admin and appUser and import them into the wallet (if they don't already exist there)
-    - Submit a transaction to create a new car
-    - Evaluate a transaction (query) to return details of this car
-    - Submit a transaction to change the owner of this car
-    - Evaluate a transaction (query) to return the updated details of this car
-
+  getResult:
+    URL: http://localhost:8080/getResult/?emailId=example@mail.com
+  
+  sendResult:
+    URL: http://localhost:8080/sendResult/
+    JSON request:
+      {
+        "emailId": "abc@gmail.com",
+        "questionsData": [
+          {
+            "option_1": "System calls",
+            "option_2": "API",
+            "option_4": "Assembly instructions",
+            "correct_option": "option_1",
+            "questionId": "que2",
+            "option_3": "Library",
+            "question": "To access the services of operating system, the interface is provided by the:",
+            "isBookmarked": false,
+            "selectedOption": "option_1"
+          },
+          {
+            "correct_option": "option_4",
+            "questionId": "que1",
+            "question": "What is operating system?",
+            "option_3": "Link to interface the hardware and application programs",
+            "option_1": "Collection of programs that manages hardware resources",
+            "option_2": "System service provider to the application programs",
+            "option_4": "All of the mentioned",
+            "isBookmarked": false,
+            "selectedOption": "option_4"
+          },
+          {
+            "option_2": "Space division multiplexing",
+            "option_4": "None of the mentioned",
+            "correct_option": "option_3",
+            "questionId": "que5",
+            "option_3": "Both (1) and (2)",
+            "question": "By operating system, the resource management can be done via:",
+            "option_1": "Time division multiplexing",
+            "isBookmarked": false,
+            "selectedOption": "option_3"
+          },
+          {
+            "option_2": "Bounded Waiting",
+            "option_4": "Progress",
+            "correct_option": "option_2",
+            "questionId": "que12",
+            "question": "Spinlocks are intended to provide __________ only.",
+            "option_3": "Aging",
+            "option_1": "Mutual Exclusion",
+            "isBookmarked": false,
+            "selectedOption": "option_2"
+          },
+          {
+            "questionId": "que8",
+            "question": "OS X has:",
+            "option_3": "Microkernel",
+            "option_1": "Monolithic kernel",
+            "option_2": "Hybrid kernel",
+            "option_4": "Monolithic kernel with modules",
+            "correct_option": "option_2",
+            "isBookmarked": false,
+            "selectedOption": "option_3"
+          }
+        ],
+        "passingCutOff": 35
+      }
 EOF

@@ -9,7 +9,6 @@ const { Contract } = require('fabric-contract-api');
 class ExamResult extends Contract {
 
     async initLedger(ctx) {
-        console.info('============= START : Initialize Ledger ===========');
 
         const result = {
                 examQuestions: 'a',
@@ -20,16 +19,16 @@ class ExamResult extends Contract {
             };
 
         await ctx.stub.putState('example@gmail.com', Buffer.from(JSON.stringify(result)));
-        console.info('============= END : Initialize Ledger ===========');
     }
 
     async queryResult( ctx, emailId ) {
 
         const resultAsBytes = await ctx.stub.getState( emailId );
+
         if ( !resultAsBytes || resultAsBytes.length === 0 ) {
             throw new Error( `${emailId} does not exist` );
         }
-        console.log( resultAsBytes.toString() );
+
         return resultAsBytes.toString();
     }
 
@@ -42,6 +41,7 @@ class ExamResult extends Contract {
             grade,
             questionsCount
         }
+        
         await ctx.stub.putState(emailId, Buffer.from(JSON.stringify( result )));
     }  
 

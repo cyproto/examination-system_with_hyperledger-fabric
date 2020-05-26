@@ -6,7 +6,7 @@ DELAY="$4"
 MAX_RETRY="$5"
 VERBOSE="$6"
 : ${CHANNEL_NAME:="mychannel"}
-: ${CC_SRC_LANGUAGE:="golang"}
+: ${CC_SRC_LANGUAGE:="javascript"}
 : ${VERSION:="1"}
 : ${DELAY:="3"}
 : ${MAX_RETRY:="5"}
@@ -21,13 +21,12 @@ if [ "$CC_SRC_LANGUAGE" = "javascript" ]; then
 
 else
 	echo The chaincode language ${CC_SRC_LANGUAGE} is not supported by this script
-	echo Supported chaincode languages are: go, java, javascript, and typescript
+	echo Supported chaincode languages are: javascript
 	exit 1
 fi
 
 # import utils
 . scripts/envVar.sh
-
 
 packageChaincode() {
   ORG=$1
@@ -189,36 +188,6 @@ chaincodeInvokeInit() {
   echo
 }
 
-chaincodeQuery() {
-  ORG=$1
-  setGlobals $ORG
-  echo "===================== Querying on peer0.org${ORG} on channel '$CHANNEL_NAME'... ===================== "
-	local rc=1
-	local COUNTER=1
-	# continue to poll
-  # we either get a successful response, or reach MAX RETRY
-	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
-    sleep $DELAY
-    echo "Attempting to Query peer0.org${ORG}, Retry after $DELAY seconds."
-    set -x
-    peer chaincode query -C $CHANNEL_NAME -n exam_result -c '{"Args":["queryAllCars"]}' >&log.txt
-    res=$?
-    set +x
-		let rc=$res
-		COUNTER=$(expr $COUNTER + 1)
-	done
-  echo
-  cat log.txt
-  if test $rc -eq 0; then
-    echo "===================== Query successful on peer0.org${ORG} on channel '$CHANNEL_NAME' ===================== "
-		echo
-  else
-    echo "!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query result on peer0.org${ORG} is INVALID !!!!!!!!!!!!!!!!"
-    echo
-    exit 1
-  fi
-}
-
 ## at first we package the chaincode
 packageChaincode 1
 
@@ -259,9 +228,5 @@ sleep 10
 chaincodeInvokeInit 1 2
 
 sleep 10
-
-# Query chaincode on peer0.org1
-echo "Querying chaincode on peer0.org1..."
-#chaincodeQuery 1
 
 exit 0
