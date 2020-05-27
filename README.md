@@ -18,7 +18,7 @@ Make sure that you have [setup your environment](https://hyperledger-fabric.read
 
 Now, just run the following command to clone and pull all the binaries and dockers images. No need to clone this repository manually, it'll all be done by the script.
 ```bash
-curl -sSL abc
+curl -sSL https://bit.ly/3eh7nxE | bash
 ```
 
 ## Start fabric network:
